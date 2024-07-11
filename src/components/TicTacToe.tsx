@@ -61,8 +61,13 @@ const TicTacToe: React.FC = () => {
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
   };
 
-  // Normal AI: Block winning moves and make somewhat strategic choices
+  // Normal AI: Block winning moves and make somewhat strategic choices, with occasional mistakes
   const makeNormalMove = (): number => {
+    // Introduce a chance for a mistake (30% chance)
+    if (Math.random() < 0.3) {
+      return makeEasyMove();
+    }
+
     // Check for winning move
     for (let i = 0; i < 9; i++) {
       if (board[i] === null) {
@@ -72,23 +77,27 @@ const TicTacToe: React.FC = () => {
       }
     }
 
-    // Block player's winning move
-    for (let i = 0; i < 9; i++) {
-      if (board[i] === null) {
-        const testBoard = [...board];
-        testBoard[i] = 'X';
-        if (calculateWinner(testBoard) === 'X') return i;
+    // Block player's winning move (80% chance)
+    if (Math.random() < 0.8) {
+      for (let i = 0; i < 9; i++) {
+        if (board[i] === null) {
+          const testBoard = [...board];
+          testBoard[i] = 'X';
+          if (calculateWinner(testBoard) === 'X') return i;
+        }
       }
     }
 
-    // Try to take center
-    if (board[4] === null) return 4;
+    // Try to take center (70% chance)
+    if (board[4] === null && Math.random() < 0.7) return 4;
 
-    // Try to take corners
-    const corners = [0, 2, 6, 8];
-    const availableCorners = corners.filter(i => board[i] === null);
-    if (availableCorners.length > 0) {
-      return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+    // Try to take corners (60% chance)
+    if (Math.random() < 0.6) {
+      const corners = [0, 2, 6, 8];
+      const availableCorners = corners.filter(i => board[i] === null);
+      if (availableCorners.length > 0) {
+        return availableCorners[Math.floor(Math.random() * availableCorners.length)];
+      }
     }
 
     // Take any available space
