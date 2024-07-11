@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import RobotSVG from './RobotSVG';
 
 // Define types
 type Player = 'X' | 'O' | null;
@@ -13,7 +12,6 @@ const TicTacToe: React.FC = () => {
   const [board, setBoard] = useState<BoardState>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<'X' | 'O'>('X');
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const [robotMessage, setRobotMessage] = useState<string>('');
 
   useEffect(() => {
     if (currentPlayer === 'O' && !calculateWinner(board) && !isBoardFull(board)) {
@@ -36,23 +34,18 @@ const TicTacToe: React.FC = () => {
     switch (difficulty) {
       case 'easy':
         move = makeEasyMove();
-        setRobotMessage("Beep boop! I made a move!");
         break;
       case 'normal':
         move = makeNormalMove();
-        setRobotMessage("I'm getting warmed up!");
         break;
       case 'hard':
         move = makeHardMove();
-        setRobotMessage("You can't beat my algorithms!");
         break;
       case 'impossible':
         move = makeImpossibleMove();
-        setRobotMessage("Resistance is futile, human!");
         break;
       default:
         move = makeEasyMove();
-        setRobotMessage("Beep boop! I made a move!");
     }
 
     const newBoard = [...board];
@@ -232,36 +225,24 @@ const TicTacToe: React.FC = () => {
 
       <div className="mb-4 text-xl font-semibold">{status}</div>
       
-      <div className="flex items-start justify-center space-x-8">
-        <div className="grid grid-cols-3 gap-2 mb-6">
-          {board.map((value, index) => (
-            <Button
-              key={index}
-              onClick={() => handleMove(index)}
-              className="w-20 h-20 text-2xl font-bold"
-              variant={value ? 'default' : 'outline'}
-              disabled={!!value || !!winner || currentPlayer === 'O'}
-            >
-              {value}
-            </Button>
-          ))}
-        </div>
-        
-        <div className="flex flex-col items-center">
-          <RobotSVG />
-          {robotMessage && (
-            <div className="mt-4 p-2 bg-blue-100 rounded-lg max-w-xs">
-              <p className="text-sm text-blue-800">{robotMessage}</p>
-            </div>
-          )}
-        </div>
+      <div className="grid grid-cols-3 gap-2 mb-6">
+        {board.map((value, index) => (
+          <Button
+            key={index}
+            onClick={() => handleMove(index)}
+            className="w-20 h-20 text-2xl font-bold"
+            variant={value ? 'default' : 'outline'}
+            disabled={!!value || !!winner || currentPlayer === 'O'}
+          >
+            {value}
+          </Button>
+        ))}
       </div>
 
       <Button 
         onClick={() => {
           setBoard(Array(9).fill(null));
           setCurrentPlayer('X');
-          setRobotMessage('');
         }}
         className="mt-4"
       >
